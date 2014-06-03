@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.companyname.springapp.domain.Office;
+import com.companyname.springapp.repository.JPAOfficeDao;
 import com.companyname.springapp.service.AddOffice;
 import com.companyname.springapp.service.OfficeManager;
 
@@ -31,13 +32,16 @@ public class AddOfficeShowController {
     @RequestMapping(method = RequestMethod.POST)
     public String onSubmit(@Valid AddOffice addOffice, BindingResult result)
     {
-        if (result.hasErrors()) {
+      
+    	
+    	if (result.hasErrors()) {
             return "addoffice";
         }
         String newName = addOffice.getName();
         String newStreet = addOffice.getStreet();
         int newPhone = addOffice.getPhone();
         int newZip = addOffice.getZip();
+    
         newOffice = new Office(newName, newStreet, newPhone, newZip);
         officeManager.addOffice(newOffice);
         return "redirect:/hello.htm";

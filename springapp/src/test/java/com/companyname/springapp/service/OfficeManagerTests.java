@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.companyname.springapp.domain.Office;
+import com.companyname.springapp.repository.InMemoryOfficeDao;
+import com.companyname.springapp.repository.OfficeDao;
 
 
 public class OfficeManagerTests {
@@ -33,12 +35,15 @@ public class OfficeManagerTests {
 		// posteriormente de lo pasaremos a nuestra lista de productos
 		office.add(office1);
 		// pasamos la lista de productos
-		officeManager.setOffice(office);
+		  OfficeDao officeDao = new InMemoryOfficeDao(office);
+	      officeManager.setOfficeDao(officeDao);
+		//officeManager.setOffice(office);
 	}
 
 	@Test
 	public void testGetOfficeWithNoOffice() {
 		officeManager= new OfficeManager();
+		officeManager.setOfficeDao(new InMemoryOfficeDao(null));
 		assertNull(officeManager.getOffice());
 	}
 
@@ -46,7 +51,6 @@ public class OfficeManagerTests {
 	public void testGetOffice() {
 		List<Office> office = officeManager.getOffice();
 		assertNotNull(office);
-		
 		Office objectOffice = office.get(0);
 		assertEquals(NAME, objectOffice.getName());
 		assertEquals(DIRECCION, objectOffice.getStreet());
@@ -55,16 +59,13 @@ public class OfficeManagerTests {
 	}
 	
 	@Test
-	public void testAddOffice() {
+	public void testAddOffice() {	
 		Office office = new Office("sucursal2", "calle1", 999999, 52332);
-		officeManager.addOffice(office);
-		List<Office> offices = officeManager.getOffice();
-		assertNotNull(officeManager.getOffice());
-		Office objectOffice = offices.get(1);
-		assertEquals("sucursal2", objectOffice.getName());
-		assertEquals("calle1", objectOffice.getStreet());
-		assertEquals(999999, objectOffice.getPhone(),0);
-		assertEquals(52332, objectOffice.getZip());
+		officeManager.getOffice().add(office);
+		assertEquals("sucursal2", officeManager.getOffice().get(1).getName());
+		assertEquals("calle1", officeManager.getOffice().get(1).getStreet());
+		assertEquals(999999, officeManager.getOffice().get(1).getPhone(),0);
+		assertEquals(52332, officeManager.getOffice().get(1).getZip());
 		
 	}
 	
